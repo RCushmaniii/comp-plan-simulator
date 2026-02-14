@@ -1,7 +1,8 @@
 "use client";
 
 import { create } from "zustand";
-import type { CompensationPlan, NetworkParams, TierId } from "@/data/types";
+import { compressToEncodedURIComponent, decompressFromEncodedURIComponent } from "lz-string";
+import type { CompensationPlan, NetworkParams, TierId, TierConfig } from "@/data/types";
 import {
   defaultCurrentPlan,
   defaultProposedPlan,
@@ -41,17 +42,37 @@ interface CompPlanState {
   loadFromUrl: () => boolean;
 }
 
+// Compact serialization: array of numbers instead of verbose JSON keys
+// Tier order: [discount, override, depth, minPV, minTV, minR]
+function tierToArray(t: TierConfig): number[] {
+  return [t.personalDiscountPct, t.overrideRatePct, t.overrideDepth, t.minPersonalVolume, t.minTeamVolume, t.minRecruits];
+}
+
+function arrayToTier(a: number[]): TierConfig {
+  return {
+    personalDiscountPct: a[0],
+    overrideRatePct: a[1],
+    overrideDepth: a[2],
+    minPersonalVolume: a[3],
+    minTeamVolume: a[4],
+    minRecruits: a[5],
+  };
+}
+
 function encodeState(state: {
   currentPlan: CompensationPlan;
   proposedPlan: CompensationPlan;
   network: NetworkParams;
 }): string {
-  const json = JSON.stringify({
-    c: state.currentPlan,
-    p: state.proposedPlan,
-    n: state.network,
-  });
-  return btoa(json);
+  // Compact format: [currentTiers, proposedTiers, networkValues]
+  const compact = [
+    [tierToArray(state.currentPlan.consultant), tierToArray(state.currentPlan.leader), tierToArray(state.currentPlan.leader_of_leaders)],
+    [tierToArray(state.proposedPlan.consultant), tierToArray(state.proposedPlan.leader), tierToArray(state.proposedPlan.leader_of_leaders)],
+    [state.network.consultantHeadcount, state.network.leaderHeadcount, state.network.lolHeadcount,
+     state.network.consultantAvgSales, state.network.leaderAvgSales, state.network.lolAvgSales,
+     state.network.growthRatePct, state.network.promotionRatePct, state.network.attritionRatePct],
+  ];
+  return compressToEncodedURIComponent(JSON.stringify(compact));
 }
 
 function decodeState(encoded: string): {
@@ -60,16 +81,35 @@ function decodeState(encoded: string): {
   network: NetworkParams;
 } | null {
   try {
-    const json = atob(encoded);
+    const json = decompressFromEncodedURIComponent(encoded);
+    if (!json) return null;
     const data = JSON.parse(json);
-    if (data.c && data.p && data.n) {
-      return {
-        currentPlan: data.c,
-        proposedPlan: data.p,
-        network: data.n,
-      };
-    }
-    return null;
+    if (!Array.isArray(data) || data.length !== 3) return null;
+
+    const [c, p, n] = data;
+    return {
+      currentPlan: {
+        consultant: arrayToTier(c[0]),
+        leader: arrayToTier(c[1]),
+        leader_of_leaders: arrayToTier(c[2]),
+      },
+      proposedPlan: {
+        consultant: arrayToTier(p[0]),
+        leader: arrayToTier(p[1]),
+        leader_of_leaders: arrayToTier(p[2]),
+      },
+      network: {
+        consultantHeadcount: n[0],
+        leaderHeadcount: n[1],
+        lolHeadcount: n[2],
+        consultantAvgSales: n[3],
+        leaderAvgSales: n[4],
+        lolAvgSales: n[5],
+        growthRatePct: n[6],
+        promotionRatePct: n[7],
+        attritionRatePct: n[8],
+      },
+    };
   } catch {
     return null;
   }
