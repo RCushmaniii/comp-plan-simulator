@@ -4,6 +4,15 @@ Interactive compensation plan simulator for direct-selling companies. Model comm
 
 **Live Demo:** [comp-plan-simulator.vercel.app](https://comp-plan-simulator.vercel.app)
 
+## Why This Exists
+
+Compensation plan changes in direct-selling companies are high-stakes decisions that affect margins, field motivation, and retention — yet most companies design them with spreadsheets and gut instinct. This simulator lets operations leaders, finance teams, and executives model the financial impact of plan changes instantly, before rolling them out to thousands of distributors.
+
+- **CEOs** see margin impact and revenue waterfall in real time
+- **Sales VPs** model per-tier payouts to build field confidence before announcements
+- **Finance teams** get auditable cost projections and break-even analysis at scale
+- **Consultants** share scenarios via URL — no logins, no data leaves the browser
+
 ## Features
 
 - **Configure Tab** — Adjust personal discounts, override rates, override depth, and qualification rules across 3 tiers (Consultant, Leader, Leader of Leaders)
@@ -38,7 +47,7 @@ All data shown in the demo is illustrative and does not represent any real compa
 
 ## License
 
-MIT — see [LICENSE](LICENSE)
+Proprietary — Copyright (c) 2025-2026 CushLabs AI Services. All rights reserved. See [LICENSE](LICENSE).
 
 ---
 
