@@ -8,7 +8,7 @@ portfolio_featured: false
 title: "Compensation Plan Simulator"
 tagline: "Model direct-selling comp plan changes in real time before rolling them out"
 slug: "comp-plan-simulator"
-category: "Web Tools"
+category: "Tools"
 tech_stack:
   - "Next.js 16"
   - "TypeScript"
