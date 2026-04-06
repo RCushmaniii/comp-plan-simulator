@@ -96,13 +96,13 @@ date_completed: "2026-02"
 #     Future: Playwright smoke test on deployed URL
 #   - Sentry: not configured — should be added for production error visibility
 health_status:
-  sentry: "-"
+  sentry: "DEFERRED"
   testing: "Y"
   ci_cd: "Y"
   health_endpoint: "n/a"
   security_headers: "Y"
   rate_limiting: "n/a"
-  env_validation: "-"
+  env_validation: "n/a"
   analytics: "DEFERRED"
   structured_logging: "-"
   dependabot: "Y"
