@@ -84,21 +84,20 @@ tags:
 date_completed: "2026-02"
 
 # === REPO HEALTH STATUS ===
-# Last audited: 2026-04-05
+# Last audited: 2026-04-06
 # Standards defined in: operating-system/delivery/repo-health-baseline.md
 #
-# Audit notes (2026-04-05):
+# Audit notes (2026-04-06):
 #   - All 10 Dependabot PRs resolved (CI actions + dependency bumps)
 #   - All 29 security alerts cleared (direct updates + pnpm overrides for transitive deps)
 #   - Zero open PRs, zero open security alerts
-#   - Testing: no framework, no test files, no test script, no CI test job
-#     Only quality gates are lint (has pre-existing errors, continue-on-error) and build
-#     Recommended: add Vitest for unit tests on lib/calculations.ts (pure functions),
-#     Playwright for smoke test on deployed URL
+#   - Testing: Vitest installed, 28 unit tests on lib/calculations.ts (all 6 exported
+#     functions), test script added, CI pipeline runs tests before lint/build
+#     Future: Playwright smoke test on deployed URL
 #   - Sentry: not configured — should be added for production error visibility
 health_status:
   sentry: "-"
-  testing: "-"
+  testing: "Y"
   ci_cd: "Y"
   health_endpoint: "n/a"
   security_headers: "Y"
