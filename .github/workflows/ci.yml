@@ -18,6 +18,8 @@ jobs:
         with:
           node-version: 20
       - run: pnpm install --frozen-lockfile
+      - name: Test
+        run: pnpm test
       - name: Lint
         run: pnpm lint
         continue-on-error: true
